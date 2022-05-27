@@ -4,32 +4,47 @@ import com.bozhko.lab2.data.Author;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 @Component
 public class DefaultAuthorRepository implements AuthorRepository {
-    private final List<Author> list = new ArrayList<>();
+    private final Map<Long, Author> authorRepositoryMap = new HashMap<>();
+    private static final AtomicLong ID_GENERATOR = new AtomicLong();
     @Override
     public List<Author> getAll() {
-        return list;
+        return new ArrayList<>(authorRepositoryMap.values());
     }
 
     @Override
     public Author get(Long id) {
-        return null;
+        return authorRepositoryMap.get(id);
     }
 
     @Override
-    public void add(Author author) {
-        list.add(author);
+    public Long create(Author author) {
+        final long authorId = ID_GENERATOR.incrementAndGet();
+        author.setId(authorId);
+        authorRepositoryMap.put(authorId, author);
+        return authorId;
     }
 
     @Override
-    public void update(Author author) {
-
+    public boolean update(Author author, Long id) {
+        if (authorRepositoryMap.containsKey(id)) {
+            author.setId(id);
+            authorRepositoryMap.put(id, author);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void remove(Author author) {
-
+    public boolean delete(Long id) {
+        return authorRepositoryMap.remove(id) != null;
     }
+
 }

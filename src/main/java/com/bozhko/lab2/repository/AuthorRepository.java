@@ -6,7 +6,7 @@ import java.util.List;
 public interface AuthorRepository {
     List<Author> getAll();
     Author get(Long id);
-    void add(Author author);
-    void update(Author author);
-    void remove(Author author);
+    Long create(Author author);
+    boolean update(Author author, Long id);
+    boolean delete(Long id);
 }

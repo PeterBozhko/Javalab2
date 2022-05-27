@@ -7,5 +7,11 @@ import java.util.List;
 
 public interface AuthorService {
     List<Author> getAll();
-    void addAuthor(AuthorRequest newAuthor);
+    Long create(AuthorRequest newAuthor);
+
+    Author get(Long id);
+
+    boolean update(AuthorRequest author, Long id);
+
+    boolean delete(Long id);
 }
