@@ -30,10 +30,10 @@ public class AuthorController {
 
     @GetMapping("/author/{id}")
     public ResponseEntity<Author> read(@PathVariable(name = "id") int id) {
-        final Author client = authorService.get((long) id);
+        final Author author = authorService.get((long) id);
 
-        return client != null
-                ? new ResponseEntity<>(client, HttpStatus.OK)
+        return author != null
+                ? new ResponseEntity<>(author, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     @PostMapping("/author")
