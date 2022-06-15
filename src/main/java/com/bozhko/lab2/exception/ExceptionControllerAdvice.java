@@ -20,4 +20,18 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(authorNotFoundException.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = AuthorInvalidArgumentException.class)
+    public ResponseEntity<String> AuthorInvalidArgumentException(AuthorInvalidArgumentException authorInvalidArgumentException) {
+        return new ResponseEntity<>(authorInvalidArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = BookNotFoundException.class)
+    public ResponseEntity<String> BookNotFoundException(BookNotFoundException bookNotFoundException) {
+        return new ResponseEntity<>(bookNotFoundException.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = BookInvalidArgumentException.class)
+    public ResponseEntity<String> BookInvalidArgumentException(BookInvalidArgumentException bookInvalidArgumentException) {
+        return new ResponseEntity<>(bookInvalidArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
