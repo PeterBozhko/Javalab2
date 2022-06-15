@@ -2,6 +2,7 @@ package com.bozhko.lab2.services;
 
 import com.bozhko.lab2.data.Author;
 import com.bozhko.lab2.data.AuthorRequest;
+import com.bozhko.lab2.exception.AuthorNotFoundException;
 import com.bozhko.lab2.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class DefaultAuthorService implements AuthorService {
 
     @Override
     public Author get(Long id) {
+        if (authorRepository.get(id)==null){
+            throw new AuthorNotFoundException("Author with id = {%d} not found".formatted(id));
+        }
         return authorRepository.get(id);
     }
 

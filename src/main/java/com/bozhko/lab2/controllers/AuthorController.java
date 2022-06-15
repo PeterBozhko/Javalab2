@@ -31,6 +31,7 @@ public class AuthorController {
     @GetMapping("/author/{id}")
     public ResponseEntity<Author> read(@PathVariable(name = "id") int id) {
         final Author author = authorService.get((long) id);
+        log.info("Get author id = {%d}".formatted(id));
 
         return author != null
                 ? new ResponseEntity<>(author, HttpStatus.OK)
