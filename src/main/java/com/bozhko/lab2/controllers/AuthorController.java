@@ -21,7 +21,7 @@ public class AuthorController {
 
     @GetMapping("/author")
     public ResponseEntity<List<Author>> getAuthors(){
-        log.info("GET Request");
+        log.info("GET request all authors");
         final List<Author> authors = authorService.getAll();
         return  authors != null &&  !authors.isEmpty()
                 ? new ResponseEntity<>(authors, HttpStatus.OK)
@@ -30,22 +30,20 @@ public class AuthorController {
 
     @GetMapping("/author/{id}")
     public ResponseEntity<Author> read(@PathVariable(name = "id") int id) {
+        log.info("Get request author by id = %d".formatted(id));
         final Author author = authorService.get((long) id);
-        log.info("Get author id = {%d}".formatted(id));
-
-        return author != null
-                ? new ResponseEntity<>(author, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(author, HttpStatus.OK);
     }
     @PostMapping("/author")
     public ResponseEntity<?> create(@RequestBody AuthorRequest authorRequest) {
-        log.info("POST Request create author");
-        authorService.create(authorRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        log.info("POST request create author");
+        Long id = authorService.create(authorRequest);
+        return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
     @PutMapping("/author/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") int id, @RequestBody AuthorRequest authorRequest) {
+        log.info("PUT request new author by id = %d".formatted(id));
         final boolean updated = authorService.update(authorRequest, (long) id);
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -54,6 +52,7 @@ public class AuthorController {
 
     @DeleteMapping("/author/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
+        log.info("DELETE author by id = %d".formatted(id));
         final boolean deleted = authorService.delete((long) id);
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)

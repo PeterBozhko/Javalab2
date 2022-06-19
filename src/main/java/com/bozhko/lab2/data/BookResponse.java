@@ -4,12 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-@Getter
 @Setter
-public class Book {
+@Getter
+public class BookResponse {
     private Long id;
 
     private String name;
-    private List<Long> authors;
+    private List<Author> authors;
     private Integer year;
 }

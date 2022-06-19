@@ -3,6 +3,7 @@ package com.bozhko.lab2.controllers;
 
 import com.bozhko.lab2.data.Book;
 import com.bozhko.lab2.data.BookRequest;
+import com.bozhko.lab2.data.BookResponse;
 import com.bozhko.lab2.services.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,31 +21,30 @@ public class BookController {
     final private BookService bookService;
 
     @GetMapping("/book")
-    public ResponseEntity<List<Book>> getBooks(){
-        log.info("GET Request");
-        final List<Book> books = bookService.getAll();
+    public ResponseEntity<List<BookResponse>> getBooks(){
+        log.info("GET request all books");
+        final List<BookResponse> books = bookService.getAll();
         return  books != null &&  !books.isEmpty()
                 ? new ResponseEntity<>(books, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/book/{id}")
-    public ResponseEntity<Book> read(@PathVariable(name = "id") int id) {
-        final Book book = bookService.get((long) id);
-
-        return book != null
-                ? new ResponseEntity<>(book, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<BookResponse> read(@PathVariable(name = "id") int id) {
+        log.info("GET request book with id = %d".formatted(id));
+        final BookResponse book = bookService.get((long) id);
+        return new  ResponseEntity<>(book, HttpStatus.OK);
     }
     @PostMapping("/book")
     public ResponseEntity<?> create(@RequestBody BookRequest bookRequest) {
-        log.info("POST Request create author");
-        bookService.create(bookRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        log.info("POST request create book");
+        Long id = bookService.create(bookRequest);
+        return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
     @PutMapping("/book/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") int id, @RequestBody BookRequest bookRequest) {
+        log.info("PUT new book by id = %d".formatted(id));
         final boolean updated = bookService.update(bookRequest, (long) id);
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -53,6 +53,7 @@ public class BookController {
 
     @DeleteMapping("/book/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
+        log.info("DELETE book by id = %d".formatted(id));
         final boolean deleted = bookService.delete((long) id);
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)

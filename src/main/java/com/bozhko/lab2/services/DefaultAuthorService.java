@@ -2,11 +2,14 @@ package com.bozhko.lab2.services;
 
 import com.bozhko.lab2.data.Author;
 import com.bozhko.lab2.data.AuthorRequest;
+import com.bozhko.lab2.exception.AuthorInvalidArgumentException;
 import com.bozhko.lab2.exception.AuthorNotFoundException;
 import com.bozhko.lab2.repository.AuthorRepository;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.beans.ConstructorProperties;
 import java.util.List;
 @Service
 public class DefaultAuthorService implements AuthorService {
@@ -20,6 +23,9 @@ public class DefaultAuthorService implements AuthorService {
 
     @Override
     public Long create(AuthorRequest newAuthor) {
+        if (newAuthor.getYear() > 2022){
+            throw new AuthorInvalidArgumentException("Year of birth of the author is impossible");
+        }
         final Author author = new Author();
         author.setFirstName(newAuthor.getFirstName());
         author.setLastName(newAuthor.getLastName());
@@ -29,14 +35,22 @@ public class DefaultAuthorService implements AuthorService {
 
     @Override
     public Author get(Long id) {
-        if (authorRepository.get(id)==null){
-            throw new AuthorNotFoundException("Author with id = {%d} not found".formatted(id));
+        Author author = authorRepository.get(id);
+        if (author==null){
+            throw new AuthorNotFoundException("Author with id = %d not found".formatted(id));
         }
-        return authorRepository.get(id);
+        return author;
     }
 
     @Override
     public boolean update(AuthorRequest author, Long id) {
+        Author oldAuthor = authorRepository.get(id);
+        if (oldAuthor==null){
+            throw new AuthorNotFoundException("Author with id = %d not found".formatted(id));
+        }
+        if (author.getYear() > 2022){
+            throw new AuthorInvalidArgumentException("Year of birth of the author is impossible");
+        }
         final Author updatedAuthor = new Author();
         updatedAuthor.setFirstName(author.getFirstName());
         updatedAuthor.setLastName(author.getLastName());
@@ -46,6 +60,10 @@ public class DefaultAuthorService implements AuthorService {
 
     @Override
     public boolean delete(Long id) {
+        Author author = authorRepository.get(id);
+        if (author==null){
+            throw new AuthorNotFoundException("Author with id = %d not found".formatted(id));
+        }
         return  authorRepository.delete(id);
     }
 }
