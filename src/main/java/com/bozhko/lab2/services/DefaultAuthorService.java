@@ -14,8 +14,12 @@ import java.util.List;
 @Service
 public class DefaultAuthorService implements AuthorService {
 
-    @Autowired
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
+
+    public DefaultAuthorService(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
+    }
+
     @Override
     public List<Author> getAll() {
         return authorRepository.getAll();

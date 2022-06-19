@@ -14,11 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class DefaultBookService implements BookService {
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-    @Autowired
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
+
+    public DefaultBookService(BookRepository bookRepository, AuthorRepository authorRepository) {
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+    }
 
     @Override
     public List<BookResponse> getAll() {
