@@ -6,11 +6,14 @@ import com.bozhko.lab2.exception.AuthorInvalidArgumentException;
 import com.bozhko.lab2.exception.AuthorNotFoundException;
 import com.bozhko.lab2.repository.AuthorRepository;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.beans.ConstructorProperties;
 import java.util.List;
+
+@Slf4j
 @Service
 public class DefaultAuthorService implements AuthorService {
 
@@ -28,6 +31,7 @@ public class DefaultAuthorService implements AuthorService {
     @Override
     public Long create(AuthorRequest newAuthor) {
         if (newAuthor.getYear() > 2022){
+            log.error("Year of birth of the author is impossible");
             throw new AuthorInvalidArgumentException("Year of birth of the author is impossible");
         }
         final Author author = new Author();
@@ -41,6 +45,7 @@ public class DefaultAuthorService implements AuthorService {
     public Author get(Long id) {
         Author author = authorRepository.get(id);
         if (author==null){
+            log.error("Author with id = %d not found".formatted(id));
             throw new AuthorNotFoundException("Author with id = %d not found".formatted(id));
         }
         return author;
@@ -50,9 +55,11 @@ public class DefaultAuthorService implements AuthorService {
     public boolean update(AuthorRequest author, Long id) {
         Author oldAuthor = authorRepository.get(id);
         if (oldAuthor==null){
+            log.error("Author with id = %d not found".formatted(id));
             throw new AuthorNotFoundException("Author with id = %d not found".formatted(id));
         }
         if (author.getYear() > 2022){
+            log.error("Year of birth of the author is impossible");
             throw new AuthorInvalidArgumentException("Year of birth of the author is impossible");
         }
         final Author updatedAuthor = new Author();
@@ -66,6 +73,7 @@ public class DefaultAuthorService implements AuthorService {
     public boolean delete(Long id) {
         Author author = authorRepository.get(id);
         if (author==null){
+            log.error("Author with id = %d not found".formatted(id));
             throw new AuthorNotFoundException("Author with id = %d not found".formatted(id));
         }
         return  authorRepository.delete(id);

@@ -7,11 +7,14 @@ import com.bozhko.lab2.exception.BookInvalidArgumentException;
 import com.bozhko.lab2.exception.BookNotFoundException;
 import com.bozhko.lab2.repository.AuthorRepository;
 import com.bozhko.lab2.repository.BookRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+@Slf4j
 @Service
 public class DefaultBookService implements BookService {
     private final BookRepository bookRepository;
@@ -46,6 +49,7 @@ public class DefaultBookService implements BookService {
     @Override
     public Long create(BookRequest bookRequest) {
         if (bookRequest.getYear() > 2022){
+            log.error("Year of publication of the book is not possible");
             throw new BookInvalidArgumentException("Year of publication of the book is not possible");
         }
         final Book newBook = new Book();
@@ -53,6 +57,7 @@ public class DefaultBookService implements BookService {
         newBook.setYear(bookRequest.getYear());
         for (Long authorId: bookRequest.getAuthorsIds()){
             if (authorRepository.get(authorId)==null){
+                log.error("Author with id = %d not found".formatted(authorId));
                 throw new AuthorNotFoundException("Author with id = %d not found".formatted(authorId));
             }
         }
@@ -64,6 +69,7 @@ public class DefaultBookService implements BookService {
     public BookResponse get(Long id) {
         final Book book = bookRepository.get(id);
         if (book==null){
+            log.error("Book with id = %d not found".formatted(id));
             throw new BookNotFoundException("Book with id = %d not found".formatted(id));
         }
         final BookResponse response = new BookResponse();
@@ -83,10 +89,12 @@ public class DefaultBookService implements BookService {
     @Override
     public boolean update(BookRequest bookRequest, Long id) {
         if (bookRequest.getYear() > 2022){
+            log.error("Year of publication of the book is not possible");
             throw new BookInvalidArgumentException("Year of publication of the book is not possible");
         }
         final Book book = bookRepository.get(id);
         if (book==null){
+            log.error("Book with id = %d not found".formatted(id));
             throw new BookNotFoundException("Book with id = %d not found".formatted(id));
         }
         final Book updatedBook = new Book();
@@ -104,6 +112,7 @@ public class DefaultBookService implements BookService {
     public boolean delete(Long id) {
         final Book book = bookRepository.get(id);
         if (book==null){
+            log.error("Book with id = {%d} not found".formatted(id));
             throw new BookNotFoundException("Book with id = {%d} not found".formatted(id));
         }
         return bookRepository.delete(id);
