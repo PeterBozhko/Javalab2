@@ -30,7 +30,7 @@ public class AuthorController {
 
     @GetMapping("/author/{id}")
     public ResponseEntity<Author> read(@PathVariable(name = "id") int id) {
-        log.info("Get request author by id = %d".formatted(id));
+        log.info("Get request author by id = {}",id);
         final Author author = authorService.get((long) id);
         return new ResponseEntity<>(author, HttpStatus.OK);
     }
@@ -43,7 +43,7 @@ public class AuthorController {
 
     @PutMapping("/author/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") int id, @RequestBody AuthorRequest authorRequest) {
-        log.info("PUT request new author by id = %d".formatted(id));
+        log.info("PUT request new author by id = {}",id);
         final boolean updated = authorService.update(authorRequest, (long) id);
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -52,7 +52,7 @@ public class AuthorController {
 
     @DeleteMapping("/author/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        log.info("DELETE author by id = %d".formatted(id));
+        log.info("DELETE author by id = {}",id);
         final boolean deleted = authorService.delete((long) id);
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)

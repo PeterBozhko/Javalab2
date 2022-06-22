@@ -1,6 +1,5 @@
 package com.bozhko.lab2;
 
-import com.bozhko.lab2.repository.DefaultAuthorRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

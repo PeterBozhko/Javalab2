@@ -31,7 +31,7 @@ public class BookController {
 
     @GetMapping("/book/{id}")
     public ResponseEntity<BookResponse> read(@PathVariable(name = "id") int id) {
-        log.info("GET request book with id = %d".formatted(id));
+        log.info("GET request book with id = {}",id);
         final BookResponse book = bookService.get((long) id);
         return new  ResponseEntity<>(book, HttpStatus.OK);
     }
@@ -44,7 +44,7 @@ public class BookController {
 
     @PutMapping("/book/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") int id, @RequestBody BookRequest bookRequest) {
-        log.info("PUT new book by id = %d".formatted(id));
+        log.info("PUT new book by id = {}",id);
         final boolean updated = bookService.update(bookRequest, (long) id);
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -53,7 +53,7 @@ public class BookController {
 
     @DeleteMapping("/book/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        log.info("DELETE book by id = %d".formatted(id));
+        log.info("DELETE book by id = {}",id);
         final boolean deleted = bookService.delete((long) id);
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)

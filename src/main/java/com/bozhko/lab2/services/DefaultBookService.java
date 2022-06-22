@@ -1,14 +1,12 @@
 package com.bozhko.lab2.services;
 
 import com.bozhko.lab2.data.*;
-import com.bozhko.lab2.exception.AuthorInvalidArgumentException;
 import com.bozhko.lab2.exception.AuthorNotFoundException;
 import com.bozhko.lab2.exception.BookInvalidArgumentException;
 import com.bozhko.lab2.exception.BookNotFoundException;
 import com.bozhko.lab2.repository.AuthorRepository;
 import com.bozhko.lab2.repository.BookRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -57,7 +55,7 @@ public class DefaultBookService implements BookService {
         newBook.setYear(bookRequest.getYear());
         for (Long authorId: bookRequest.getAuthorsIds()){
             if (authorRepository.get(authorId)==null){
-                log.error("Author with id = %d not found".formatted(authorId));
+                log.error("Author with id = {} not found", authorId);
                 throw new AuthorNotFoundException("Author with id = %d not found".formatted(authorId));
             }
         }
@@ -69,7 +67,7 @@ public class DefaultBookService implements BookService {
     public BookResponse get(Long id) {
         final Book book = bookRepository.get(id);
         if (book==null){
-            log.error("Book with id = %d not found".formatted(id));
+            log.error("Book with id = {} not found", id);
             throw new BookNotFoundException("Book with id = %d not found".formatted(id));
         }
         final BookResponse response = new BookResponse();
@@ -94,16 +92,12 @@ public class DefaultBookService implements BookService {
         }
         final Book book = bookRepository.get(id);
         if (book==null){
-            log.error("Book with id = %d not found".formatted(id));
+            log.error("Book with id = {} not found", id);
             throw new BookNotFoundException("Book with id = %d not found".formatted(id));
         }
         final Book updatedBook = new Book();
         updatedBook.setName(bookRequest.getName());
         updatedBook.setYear(bookRequest.getYear());
-//        List<Author> authors = new ArrayList<>();
-//        for (Long authorId: bookRequest.getAuthorsIds()){
-//            authors.add(authorService.get(authorId));
-//        }
         updatedBook.setAuthors(bookRequest.getAuthorsIds());
         return bookRepository.update(updatedBook, id);
     }
@@ -112,8 +106,8 @@ public class DefaultBookService implements BookService {
     public boolean delete(Long id) {
         final Book book = bookRepository.get(id);
         if (book==null){
-            log.error("Book with id = {%d} not found".formatted(id));
-            throw new BookNotFoundException("Book with id = {%d} not found".formatted(id));
+            log.error("Book with id = {} not found", id);
+            throw new BookNotFoundException("Book with id = %d not found".formatted(id));
         }
         return bookRepository.delete(id);
     }
